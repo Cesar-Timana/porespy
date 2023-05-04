@@ -182,7 +182,7 @@ def regions_to_network(regions, phases=None, voxel_size=1, accuracy='standard'):
         p_dia_local[pore] = 2*np.amax(pore_dt)
         p_dia_global[pore] = 2*np.amax(sub_dt)
         # The following is overwritten if accuracy is set to 'high'
-        p_area_surf[pore] = np.sum(pore_dt == 1)
+        p_area_surf[pore] = np.sum(sub_dt*pore_im == 1) #np.sum(pore_dt == 1) mod
         im_w_throats = spim.binary_dilation(input=pore_im, structure=struc_elem(1))
         im_w_throats = im_w_throats*sub_im
         Pn = np.unique(im_w_throats)[1:] - 1
@@ -195,7 +195,7 @@ def regions_to_network(regions, phases=None, voxel_size=1, accuracy='standard'):
                 t_perimeter.append(np.sum(sub_dt[vx] < 2))
                 # The following is overwritten if accuracy is set to 'high'
                 t_area.append(np.size(vx[0]))
-                p_area_surf[pore] -= np.size(vx[0])
+                #p_area_surf[pore] -= np.size(vx[0]) #mod
                 t_inds = tuple([i+j for i, j in zip(vx, s_offset)])
                 temp = np.where(dt[t_inds] == np.amax(dt[t_inds]))[0][0]
                 t_coords.append(tuple([t_inds[k][temp] for k in range(im.ndim)]))
