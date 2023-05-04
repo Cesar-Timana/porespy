@@ -20,7 +20,7 @@ tqdm = get_tqdm()
 logger = logging.getLogger(__name__)
 
 
-def snow_partitioning(im, dt=None, r_max=4, sigma=0.4, peaks=None):
+def snow_partitioning(im, dt=None, r_max=4, sigma=0.4, peaks=None, legacy='no'):
     r"""
     Partition the void space into pore regions using a marker-based
     watershed algorithm
@@ -110,7 +110,12 @@ def snow_partitioning(im, dt=None, r_max=4, sigma=0.4, peaks=None):
         peaks = find_peaks(dt=dt_blurred, r_max=r_max)
 
         logger.debug(f"Initial number of peaks: {spim.label(peaks)[1]}")
-        peaks = trim_saddle_points(peaks=peaks, dt=dt)
+        #mod ---
+        if legacy == 'no':
+            peaks = trim_saddle_points(peaks=peaks, dt=dt)
+        else:
+            peaks = trim_saddle_points_legacy(peaks=peaks, dt=dt)
+        #-------
         logger.debug(f"Peaks after trimming saddle points: {spim.label(peaks)[1]}")
         peaks = trim_nearby_peaks(peaks=peaks, dt=dt)
         logger.debug(f"Peaks after trimming nearby points: {spim.label(peaks)[1]}")

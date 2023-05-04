@@ -18,6 +18,7 @@ def snow2(phases,
           sigma=0.4,
           r_max=4,
           peaks=None,
+          legacy='no',
           parallelization={},):
     r"""
     Applies the SNOW algorithm to each phase indicated in ``phases``.
@@ -168,7 +169,7 @@ def snow2(phases,
                 im=phase, sigma=sigma, r_max=r_max, **parallelization)
         else:
             snow = snow_partitioning(im=phase, sigma=sigma, r_max=r_max,
-                                     peaks=pk)
+                                     peaks=pk,legacy=legacy)
         if regions is None:
             regions = np.zeros_like(snow.regions, dtype=int)
         # Note: Using snow.regions > 0 here instead of phase is needed to
